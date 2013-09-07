@@ -45,6 +45,7 @@ BEGIN {
 }
 
 use JSON;
+use Config::YAML;
 use Try::Tiny;
 use Sys::Hostname;
 use LWP::UserAgent;
@@ -83,6 +84,16 @@ unless ($apikey){
 	close $fh or $logger->logdie("Couldn't close $api_key_file: $!");
 }
 $logger->logdie('Invalid API key') unless ($apikey =~ /^[0-9A-F]{8}-(?:[0-9A-F]{4}-){2}[0-9A-F]{16}\z$/);
+
+$config = Config::YAML->new( 
+	config => "$confdir/config.yaml",
+	output => "$confdir/config.yaml",
+ 	post_target => "https://longview.linode.com/post"
+);
+
+$config->write;
+
+$post_target = $config->get_post_target;
 
 my $stats = {
 	apikey  => $apikey,
