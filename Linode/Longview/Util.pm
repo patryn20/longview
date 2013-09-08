@@ -50,7 +50,6 @@ use POSIX;
 use JSON;
 
 our $logger = get_logger();
-our $post_target;
 
 our $gua;
 #our $post_target   = 'https://longview.linode.com/post';
@@ -80,6 +79,7 @@ sub get_UA {
 sub post {
 	my $payload = shift;
 	my $ua = get_UA();
+	our $post_target;
 	$logger->info('UTL POST TARGET: ' . $post_target);
 	my $req = $ua->post(
 		$post_target,

@@ -95,6 +95,8 @@ $config->write;
 
 our $post_target = $config->get_post_target;
 
+$logger->info('OUTER POST TARGET: ' . $post_target);
+
 my $stats = {
 	apikey  => $apikey,
 	version => '1.0',
