@@ -51,7 +51,6 @@ use JSON;
 
 our $logger = get_logger();
 our $post_target;
-$logger->info('UTIL: ' . $post_target);
 
 our $gua;
 #our $post_target   = 'https://longview.linode.com/post';
