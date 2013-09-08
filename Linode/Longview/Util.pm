@@ -34,7 +34,7 @@ use warnings;
 use Exporter 'import';
 our @EXPORT = qw($logger);
 our %EXPORT_TAGS = (
-	DRIVER  => [qw(constant_push flatten_data slurp_file daemonize_self check_already_running $SLEEP_TIME enable_debug_logging $VERSION post $logger $apikey)],
+	DRIVER  => [qw(constant_push flatten_data slurp_file daemonize_self check_already_running $SLEEP_TIME enable_debug_logging $VERSION post $logger $apikey $post_target)],
 	BASIC   => [qw(slurp_file $PROCFS $logger)],
 	SYSINFO => [qw(slurp_file detect_system $VERSION $PROCFS $ARCH $logger)],
 );
@@ -61,16 +61,7 @@ our $ARCH    = get_architecture() or $logger->info("Couldn't determine architect
 our $SLEEP_TIME = 60;
 
 our $apikey;
-
-our $config = Config::YAML->new( 
-	config => $Linode::Longview::confdir . "/config.yaml",
-	output => $Linode::Longview::confdir . "/config.yaml",
- 	post_target => "https://longview.linode.com/post"
-);
-
-$config->write;
-
-our $post_target = $config->get_post_target;
+our $post_target;
 
 my $pid_file    = '/var/run/longview.pid';
 my $slots = 10;

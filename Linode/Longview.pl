@@ -85,6 +85,16 @@ unless ($apikey){
 }
 $logger->logdie('Invalid API key') unless ($apikey =~ /^[0-9A-F]{8}-(?:[0-9A-F]{4}-){2}[0-9A-F]{16}\z$/);
 
+our $config = Config::YAML->new( 
+	config => "$confdir/config.yaml",
+	output => "$confdir/config.yaml",
+ 	post_target => "https://longview.linode.com/post"
+);
+
+$config->write;
+
+$post_target = $config->get_post_target;
+
 $logger->info('OUTER POST TARGET: ' . $post_target);
 
 my $stats = {
