@@ -85,7 +85,7 @@ unless ($apikey){
 }
 $logger->logdie('Invalid API key') unless ($apikey =~ /^[0-9A-F]{8}-(?:[0-9A-F]{4}-){2}[0-9A-F]{16}\z$/);
 
-$config = Config::YAML->new( 
+our $config = Config::YAML->new( 
 	config => "$confdir/config.yaml",
 	output => "$confdir/config.yaml",
  	post_target => "https://longview.linode.com/post"
@@ -93,7 +93,7 @@ $config = Config::YAML->new(
 
 $config->write;
 
-$post_target = $config->get_post_target;
+our $post_target = $config->get_post_target;
 
 my $stats = {
 	apikey  => $apikey,
