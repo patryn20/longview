@@ -35,7 +35,7 @@ use Exporter 'import';
 our @EXPORT = qw($logger);
 our %EXPORT_TAGS = (
 	DRIVER  => [qw(constant_push flatten_data slurp_file daemonize_self check_already_running $SLEEP_TIME enable_debug_logging $VERSION post $logger $apikey $post_target)],
-	BASIC   => [qw(slurp_file $PROCFS $logger $post_target)],
+	BASIC   => [qw(slurp_file $PROCFS $logger)],
 	SYSINFO => [qw(slurp_file detect_system $VERSION $PROCFS $ARCH $logger)],
 );
 our @EXPORT_OK
