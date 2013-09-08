@@ -79,9 +79,9 @@ sub get_UA {
 sub post {
 	my $payload = shift;
 	my $ua = get_UA();
-	$logger->info('UTIL: ' . $post_target);
+	$logger->info('UTIL: ' . Linode::Longview->post_target);
 	my $req = $ua->post(
-		$post_target,
+		Linode::Longview->post_target,
 		Content_Type => 'form-data',
 		Content => [
 			'data' => [
