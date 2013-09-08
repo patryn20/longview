@@ -63,8 +63,8 @@ our $SLEEP_TIME = 60;
 our $apikey;
 
 our $config = Config::YAML->new( 
-	config => "$confdir/config.yaml",
-	output => "$confdir/config.yaml",
+	config => $Linode::Longview::confdir . "/config.yaml",
+	output => $Linode::Longview::confdir . "/config.yaml",
  	post_target => "https://longview.linode.com/post"
 );
 
