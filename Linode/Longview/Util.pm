@@ -50,7 +50,8 @@ use POSIX;
 use JSON;
 
 our $logger = get_logger();
-$logger->info('UTIL: ' . Linode::Longview->post_target);
+our $post_target;
+$logger->info('UTIL: ' . $post_target);
 
 our $gua;
 #our $post_target   = 'https://longview.linode.com/post';
@@ -81,7 +82,7 @@ sub post {
 	my $payload = shift;
 	my $ua = get_UA();
 	my $req = $ua->post(
-		Linode::Longview->post_target,
+		$post_target,
 		Content_Type => 'form-data',
 		Content => [
 			'data' => [
