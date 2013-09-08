@@ -148,4 +148,5 @@ sub _prep_for_main {
 	$0 = 'linode-longview';
 	$SIG{TERM} = $SIG{INT} = $SIG{HUP} = $SIG{QUIT} = sub { $quit = 1 };
 	$logger->info('Start up complete');
+	$logger->info($post_target);
 }
