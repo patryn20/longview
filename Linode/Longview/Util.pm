@@ -62,6 +62,16 @@ our $SLEEP_TIME = 60;
 
 our $apikey;
 
+our $config = Config::YAML->new( 
+	config => "$confdir/config.yaml",
+	output => "$confdir/config.yaml",
+ 	post_target => "https://longview.linode.com/post"
+);
+
+$config->write;
+
+our $post_target = $config->get_post_target;
+
 my $pid_file    = '/var/run/longview.pid';
 my $slots = 10;
 my %push_iteration;
@@ -79,7 +89,6 @@ sub get_UA {
 sub post {
 	my $payload = shift;
 	my $ua = get_UA();
-	our $post_target;
 	$logger->info('UTL POST TARGET: ' . $post_target);
 	my $req = $ua->post(
 		$post_target,
