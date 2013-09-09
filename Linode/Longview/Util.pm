@@ -80,7 +80,6 @@ sub get_UA {
 sub post {
 	my $payload = shift;
 	my $ua = get_UA();
-	$logger->info('UTL POST TARGET: ' . $post_target);
 	my $req = $ua->post(
 		$post_target,
 		Content_Type => 'form-data',
