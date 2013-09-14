@@ -34,14 +34,14 @@ use warnings;
 use Exporter 'import';
 our @EXPORT = qw($logger);
 our %EXPORT_TAGS = (
-	DRIVER  => [qw(constant_push flatten_data slurp_file daemonize_self check_already_running $SLEEP_TIME enable_debug_logging $VERSION post $logger $apikey)],
+	DRIVER  => [qw(constant_push flatten_data slurp_file daemonize_self check_already_running $SLEEP_TIME enable_debug_logging $VERSION post $logger $apikey $post_target)],
 	BASIC   => [qw(slurp_file $PROCFS $logger)],
 	SYSINFO => [qw(slurp_file detect_system $VERSION $PROCFS $ARCH $logger)],
 );
 our @EXPORT_OK
 	= qw(slurp_file detect_system constant_push flatten_data
 		 daemonize_self check_already_running enable_debug_logging post ge_UA
-		 $PROCFS $ARCH $SLEEP_TIME $TICKS $VERSION $apikey);
+		 $PROCFS $ARCH $SLEEP_TIME $TICKS $VERSION $apikey $post_target);
 
 use Linode::Longview::Logger;
 
@@ -52,7 +52,7 @@ use JSON;
 our $logger = get_logger();
 
 our $gua;
-our $post_target   = 'https://longview.linode.com/post';
+#our $post_target   = 'https://longview.linode.com/post';
 
 our $VERSION = '1.0.0';
 our $TICKS   = POSIX::sysconf(&POSIX::_SC_CLK_TCK);
@@ -61,6 +61,7 @@ our $ARCH    = get_architecture() or $logger->info("Couldn't determine architect
 our $SLEEP_TIME = 60;
 
 our $apikey;
+our $post_target;
 
 my $pid_file    = '/var/run/longview.pid';
 my $slots = 10;
