@@ -1,8 +1,10 @@
-Linode Longview
+Linode Longview - Configurable endpoint
 ===============
 
 ## Overview
 Longview is a system level statistics collection and graphing service, powered by the Longview open source software agent that can be installed onto any Linux system. The Longview agent collects system statistics and sends them to us, where we store the data and present it in beautiful and meaningful ways.
+
+This fork adds the ability to configure the end point in use by the Longview agent by editing the config.yaml file in the configuration directory.
 
 ### Preview
 
