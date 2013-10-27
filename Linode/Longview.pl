@@ -61,15 +61,31 @@ my $pid = check_already_running();
 $logger->logdie("The Longview agent is already running as PID: $pid") if $pid;
 
 my $confdir    = '/etc/linode';
-my $api_key_file = "$confdir/longview.key";
+my $conf_file = "$confdir/config.yaml";
 
+my $conf_yaml = scalar(slurp_file($conf_file));
+unless ($conf_yaml){
+	umask 066;
+	mkdir $confdir;
+	open my $fh, '>', $conf_file or $logger->logdie("Couldn't open $conf_file for writing: $!");
+	print $fh "---\n\n";
+	close $fh or $logger->logdie("Couldn't close $conf_file: $!");
+}
 
-$apikey = scalar(slurp_file($api_key_file));
+our $config = Config::YAML->new( 
+	config => $conf_file,
+	output => $conf_file,
+ 	post_target => "",
+ 	apikey => ""
+);
+
+$apikey = $config->get_apikey;
+$post_target = $config->get_post_target;
 unless ($apikey){
-	print "\nNo api key found. Please enter your API Key: " if -t;
+	print "\nNo API key found. Please enter your API Key: " if -t;
 	$apikey = <>;
 	unless(defined $apikey){
-		print "No api key found. Please add your API key to /etc/linode/longview.key before starting longview.\n";
+		print "No API key found. Please add your API key to /etc/linode/config.yaml before starting longview.\n";
 		exit 1;
 	}
 	chomp($apikey);
@@ -77,23 +93,27 @@ unless ($apikey){
 		print "Invalid API Key\n";
 		exit 1;
 	}
-	umask 066;
-	mkdir $confdir;
-	open my $fh, '>', $api_key_file or $logger->logdie("Couldn't open $api_key_file for writing: $!");
-	print $fh $apikey;
-	close $fh or $logger->logdie("Couldn't close $api_key_file: $!");
+	$config->set_apikey($apikey)
 }
 $logger->logdie('Invalid API key') unless ($apikey =~ /^[0-9A-F]{8}-(?:[0-9A-F]{4}-){2}[0-9A-F]{16}\z$/);
 
-our $config = Config::YAML->new( 
-	config => "$confdir/config.yaml",
-	output => "$confdir/config.yaml",
- 	post_target => "https://longview.linode.com/post"
-);
+unless ($post_target){
+	print "\nNo API endpoint found. Please enter the full URL of the endpoint (eg:http://127.0.0.1/endpoint/v1/log): " if -t;
+	$post_target = <>;
+	unless(defined $post_target){
+		print "No API endpoint found. Please add your API endpoint URL to /etc/linode/config.yaml before starting longview.\n";
+		exit 1;
+	}
+	chomp($post_target);
+	unless ($post_target =~ /^(http|https):\/\//){
+		print "Invalid API endpoint\n";
+		exit 1;
+	}
+	$config->set_post_target($post_target)
+}
+$logger->logdie('Invalid API endpoint') unless ($post_target =~ /^(http|https):\/\//);
 
 $config->write;
-
-$post_target = $config->get_post_target;
 
 my $stats = {
 	apikey  => $apikey,
@@ -139,8 +159,8 @@ while (!$quit) {
 }
 
 sub _prep_for_main {
-	chown 0, 0, $api_key_file;
-	chmod 0600, $api_key_file;
+	chown 0, 0, $conf_file;
+	chmod 0600, $conf_file;
 
 	daemonize_self();
 	enable_debug_logging() if(defined $ARGV[0] && $ARGV[0] =~ /Debug/i);
